@@ -78,7 +78,7 @@ A web interface for Stable Diffusion, implemented using Gradio library.
 - Clip skip
 - Hypernetworks
 - Loras (same as Hypernetworks but more pretty)
-- A separate UI where you can choose, with preview, which embeddings, hypernetworks or Loras to add to your prompt 
+- A separate UI where you can choose, with preview, which embeddings, hypernetworks or Loras to add to your prompt
 - Can select to load a different VAE from settings screen
 - Estimated completion time in progress bar
 - API
@@ -122,7 +122,7 @@ Alternatively, use online services (like Google Colab):
 # Debian-based:
 sudo apt install wget git python3 python3-venv libgl1 libglib2.0-0
 # Red Hat-based:
-sudo dnf install wget git python3 gperftools-libs libglvnd-glx 
+sudo dnf install wget git python3 gperftools-libs libglvnd-glx
 # openSUSE-based:
 sudo zypper install wget git python3 libtcmalloc4 libglvnd
 # Arch-based:
@@ -134,6 +134,28 @@ wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/m
 ```
 3. Run `webui.sh`.
 4. Check `webui-user.sh` for options.
+
+### Installation via Docker
+
+1. Build local container image.
+```bash
+git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+cd stable-diffusion-webui
+docker build . -t ghcr.io/AUTOMATIC1111/stable-diffusion-webui
+```
+2. Run it.
+```bash
+docker run --gpus=all --name automatic1111 --network=host -v automatic1111:/workspace/models/Stable-diffusion ghcr.io/automatic1111/stable-diffusion-webui
+# while it is running, for optional dev troubleshooting:
+docker exec -it automatic1111 sh
+```
+
+Notes:
+- Host networking `--network=host` seems to be necessary.  Specifying `-p 7860:7860` instead is  preferable (reduced access to host network stack) but results in connection reset errors in web browser.
+- Storing checkpoint models in a volume `-v automatic1111:/workspace/models/Stable-diffusion` is optional, but allows rebuilding/upgrading docker image without redownloading the 3.97 GB checkpoint model.  This is especially useful if other models have been downloaded/installed.
+- If GPU is not detected even with `--gpus=all`, troubleshoot with `nvidia/cuda` docker image.
+- Specifying `--name automatic1111` is often helpful but optional.  Sometimes `--rm` is helpful as well.
+
 ### Installation on Apple Silicon
 
 Find the instructions [here](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Installation-on-Apple-Silicon).
